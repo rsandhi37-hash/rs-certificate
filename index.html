@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RS Certificate Generator | Digital Ecosystem</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-base: #030712;
+            --grid-line: rgba(3, 218, 198, 0.07);
+            --accent-cyan: #03dac6;
+            --accent-magenta: #ff0055;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --card-bg: rgba(15, 23, 42, 0.6);
+            --card-border: rgba(3, 218, 198, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(3, 218, 198, 0.15) 0%, transparent 60%),
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            background-position: center top;
+            background-attachment: fixed;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        h1 {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 28px;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(3, 218, 198, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-cyan), #009688);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Share Tech Mono', monospace;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.4s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(3, 218, 198, 0.3);
+            color: #fff;
+        }
+
+        #download-section {
+            display: none;
+            margin-top: 30px;
+            animation: slideUpFade 0.5s ease forwards;
+        }
+
+        .canvas-preview {
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid var(--accent-cyan);
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, var(--accent-magenta), #c2185b);
+            color: #fff;
+        }
+
+        .btn-download:hover {
+            box-shadow: 0 10px 20px rgba(255, 0, 85, 0.3);
+        }
+
+        /* Hidden canvas used for generating the high-res image */
+        canvas {
+            display: none;
+        }
+
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1><i class="fas fa-award"></i> RS Certificate</h1>
+        <p>Get your official RS Digital Ecosystem appreciation certificate.</p>
+
+        <div class="input-group">
+            <label for="userName">Enter Your Full Name</label>
+            <input type="text" id="userName" placeholder="e.g. John Doe" autocomplete="off">
+        </div>
+
+        <button class="btn" onclick="generateCertificate()">
+            <i class="fas fa-magic"></i> Generate Certificate
+        </button>
+
+        <div id="download-section">
+            <img id="previewImage" class="canvas-preview" alt="Certificate Preview">
+            
+            <a id="downloadLink" href="#" download="RS_Certificate.png" style="text-decoration: none;">
+                <button class="btn btn-download">
+                    <i class="fas fa-download"></i> Download Certificate
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <canvas id="certCanvas" width="1123" height="794"></canvas>
+
+    <script>
+        function generateCertificate() {
+            const nameInput = document.getElementById('userName').value.trim();
+            
+            if (nameInput === "") {
+                alert("Please enter your name first.");
+                return;
+            }
+
+            const canvas = document.getElementById('certCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // 1. Draw Background (Rich Dark Theme to match RS Ecosystem)
+            ctx.fillStyle = "#0f172a"; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 2. Draw Outer Border (Cyan)
+            ctx.strokeStyle = "#03dac6";
+            ctx.lineWidth = 15;
+            ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
+
+            // 3. Draw Inner Border (Magenta)
+            ctx.strokeStyle = "#ff0055";
+            ctx.lineWidth = 4;
+            ctx.strokeRect(55, 55, canvas.width - 110, canvas.height - 110);
+
+            // 4. Draw Header Text
+            ctx.textAlign = "center";
+            ctx.fillStyle = "#03dac6";
+            ctx.font = "bold 60px 'Share Tech Mono', monospace, Arial";
+            ctx.fillText("CERTIFICATE OF APPRECIATION", canvas.width / 2, 180);
+
+            // 5. Draw Sub-header
+            ctx.fillStyle = "#94a3b8";
+            ctx.font = "30px 'Rajdhani', sans-serif";
+            ctx.fillText("This is proudly presented to", canvas.width / 2, 280);
+
+            // 6. Draw User Name
+            ctx.fillStyle = "#ffffff";
+            // Using a beautiful cursive font for the name
+            ctx.font = "100px 'Great Vibes', cursive, Arial";
+            ctx.fillText(nameInput, canvas.width / 2, 430);
+
+            // Draw a line under the name
+            ctx.beginPath();
+            ctx.moveTo(canvas.width / 2 - 300, 460);
+            ctx.lineTo(canvas.width / 2 + 300, 460);
+            ctx.strokeStyle = "#03dac6";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // 7. Draw Description
+            ctx.fillStyle = "#94a3b8";
+            ctx.font = "28px 'Rajdhani', sans-serif";
+            ctx.fillText("For officially exploring and becoming a valued part of the", canvas.width / 2, 540);
+            
+            ctx.fillStyle = "#03dac6";
+            ctx.font = "bold 32px 'Share Tech Mono', monospace";
+            ctx.fillText("RS DIGITAL ECOSYSTEM", canvas.width / 2, 590);
+
+            // 8. Draw Signature Area
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "24px 'Share Tech Mono', monospace";
+            ctx.fillText("REHAN SANDHI", canvas.width / 2, 700);
+            
+            ctx.fillStyle = "#94a3b8";
+            ctx.font = "20px 'Rajdhani', sans-serif";
+            ctx.fillText("Founder & Lead Developer", canvas.width / 2, 730);
+
+            // Convert canvas to image and show in preview/download
+            const dataUrl = canvas.toDataURL("image/png");
+            document.getElementById('previewImage').src = dataUrl;
+            document.getElementById('downloadLink').href = dataUrl;
+
+            // Show the download section
+            document.getElementById('download-section').style.display = 'block';
+        }
+
+        // Pre-load the fonts so they render correctly on canvas on first click
+        window.onload = function() {
+            document.fonts.ready.then(function () {
+                console.log("Fonts loaded for canvas.");
+            });
+        };
+    </script>
+</body>
+</html>
+
